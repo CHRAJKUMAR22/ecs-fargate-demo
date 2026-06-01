@@ -1,0 +1,21 @@
+{
+  "family": "ecs-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::942198061638:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "ecs-container",
+      "image": "942198061638.dkr.ecr.ap-south-1.amazonaws.com/ecs-fargate-app:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "protocol": "tcp"
+        }
+      ]
+    }
+  ]
+}
