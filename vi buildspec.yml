@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - AWS_ACCOUNT_ID=942198061638
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
+
+  build:
+    commands:
+      - docker build -t ecs-fargate-app .
+      - docker tag ecs-fargate-app:latest $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/ecs-fargate-app:latest
+
+  post_build:
+    commands:
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/ecs-fargate-app:latest
+      - printf '[{"name":"ecs-container","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/ecs-fargate-app:latest > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
